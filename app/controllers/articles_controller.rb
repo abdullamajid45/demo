@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 class ArticlesController < ApplicationController
   respond_to :html, :xml, :json, :od
-  before_action :get_article, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, :except => [:show, :index]
+  before_action :get_article, only: %i[show edit update destroy]
+  before_action :authenticate_user!, except: %i[show index]
 
-#  around_action :wrap_in_transaction, only: :show
-
+  #  around_action :wrap_in_transaction, only: :show
 
   def index
-    @articles = Article.all.order("created_at DESC")
+    @articles = Article.all.order('created_at DESC')
     respond_with @articles
   end
 
@@ -15,7 +16,7 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf { render pdf: generate_pdf(@article) }
-      format.json { render json: (@article)}
+      format.json { render json: @article }
     end
   end
 
@@ -32,11 +33,9 @@ class ArticlesController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
-
     if @article.update(article_params)
       redirect_to @article
     else
@@ -51,11 +50,12 @@ class ArticlesController < ApplicationController
   end
 
   private
+
   def generate_pdf(article)
-      Prawn::Document.new do
-        text article.title, align: :center
-        text "Body: #{article.text}"
-      end.render
+    Prawn::Document.new do
+      text article.title, align: :center
+      text "Body: #{article.text}"
+    end.render
     end
 
   def get_article

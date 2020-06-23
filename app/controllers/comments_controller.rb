@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class CommentsController < ApplicationController
-  before_action :get_article, only: [:create, :destroy]
+  before_action :get_article, only: %i[create destroy]
 
   def create
     @comment = @article.comments.create(comment_params)
@@ -13,11 +15,12 @@ class CommentsController < ApplicationController
   end
 
   private
+
   def get_article
     @article = Article.find(params[:article_id])
   end
 
-    def comment_params
-      params.require(:comment).permit(:commenter, :body)
-    end
+  def comment_params
+    params.require(:comment).permit(:commenter, :body)
+  end
 end
